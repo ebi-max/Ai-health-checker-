@@ -1,0 +1,14 @@
+# mock_model.py
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Flatten, Conv2D, MaxPooling2D
+
+# Simple CNN
+model = Sequential([
+    Conv2D(16, (3,3), activation='relu', input_shape=(224,224,3)),
+    MaxPooling2D(2,2),
+    Flatten(),
+    Dense(5, activation='softmax')  # 5 classes
+])
+
+model.save("health_model.h5")
+print("Mock model saved as health_model.h5")
