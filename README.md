@@ -113,4 +113,4 @@ All applications are developed for educational, awareness, and decision-support 
  🔗 LINKS (Add live app & repo links here)
 - AI Waste Sorter: [Link here]  
 - AI Health Checker: [Link here]  
-- AI CyberSafe Checker: [Link here]
+- AI CyberSafe Checker: [Link here
