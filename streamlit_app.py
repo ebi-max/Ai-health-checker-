@@ -123,4 +123,6 @@ elif menu == "Dashboard":
     col3.metric("AI Confidence", "92%")
     col4.metric("Retention Rate", "67%")
 
-    st.subheader("💰 Revenue Potential
+    st.subheader("""
+💰 Revenue Potential
+""")
