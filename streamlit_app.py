@@ -1,174 +1,70 @@
-
 import streamlit as st
 from datetime import datetime
-import json
 
-# ---------------------------------
-# Page Config
-# ---------------------------------
-st.set_page_config(
-    page_title="AI Health Checker",
-    page_icon="🩺",
-    layout="centered"
-)
+st.set_page_config(page_title="AI Health Checker", layout="wide")
 
-# ---------------------------------
-# Header / Branding
-# ---------------------------------
-st.markdown("""
-<h2 style="text-align:center;">🩺 AI Health Checker</h2>
-<p style="text-align:center; font-weight:bold;">Powered by Ebiklean Global</p>
-<p style="text-align:center;">AI-assisted health awareness & early risk insights</p>
-<hr>
-""", unsafe_allow_html=True)
+            LOGIN 
 
-# ---------------------------------
-# Session State Init
-# ---------------------------------
 if "user" not in st.session_state:
-    st.session_state.user = None
+    st.title("🩺 AI Health Checker")
+    st.caption("Powered by Ebiklean Global")
 
-if "chat" not in st.session_state:
-    st.session_state.chat = []
-
-# ---------------------------------
-# Login (Simple & Safe)
-# ---------------------------------
-if st.session_state.user is None:
     name = st.text_input("Enter your name to continue")
-    if st.button("Login"):
-        if name.strip():
-            st.session_state.user = name
-            st.rerun()
-        else:
-            st.warning("Please enter your name")
+    if st.button("Login") and name.strip():
+        st.session_state.user = name
+        st.rerun()
     st.stop()
 
-st.success(f"Welcome, {st.session_state.user} 👋")
+         DASHBOARD
 
-# ---------------------------------
-# Notifications
-# ---------------------------------
-st.info("🔔 Tip: This tool provides awareness, not medical diagnosis.")
+st.sidebar.title("📊 Dashboard")
+st.sidebar.write(f"Welcome, **{st.session_state.user}**")
+st.sidebar.success("Status: Active")
 
-# ---------------------------------
-# Health Input
-# ---------------------------------
-st.subheader("🧾 Health Check Form")
+st.title("🩺 AI Health Checker")
+st.caption("AI-assisted health awareness & early risk insights")
 
-age = st.number_input("Age", 1, 120, 25)
-weight = st.number_input("Weight (kg)", 1.0, 300.0, 70.0)
-height = st.number_input("Height (cm)", 50.0, 250.0, 170.0)
+             CHAT 
 
-bp = st.selectbox("Blood Pressure Level", ["Normal", "Elevated", "High"])
-activity = st.selectbox("Daily Activity Level", ["Low", "Moderate", "High"])
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-# ---------------------------------
-# Classification Logic (Safe)
-# ---------------------------------
-def classify_health(age, bp, activity):
-    if bp == "High" or age > 60:
-        return "High Risk", "⚠️ Consult a healthcare professional."
-    elif activity == "Low":
-        return "Moderate Risk", "⚠️ Increase physical activity."
-    else:
-        return "Low Risk", "✅ Maintain healthy habits."
+def health_ai(text):
+    return f"""
+🩺 **Health Insight**
 
-# ---------------------------------
-# Run Assessment
-# ---------------------------------
-if st.button("Run AI Health Check"):
-    risk, advice = classify_health(age, bp, activity)
+Based on your input (**{text}**), this may relate to lifestyle, hydration,
+stress, rest, or nutrition.
 
-    st.subheader("🧠 AI Health Result")
-    st.write(f"**Risk Level:** {risk}")
-    st.write(f"**Advice:** {advice}")
+⚠️ This is **not a diagnosis**. Please consult a healthcare professional if symptoms persist.
+"""
 
-    report = {
-        "Name": st.session_state.user,
-        "Age": age,
-        "Weight": weight,
-        "Height": height,
-        "Blood Pressure": bp,
-        "Activity Level": activity,
-        "Risk Level": risk,
-        "Advice": advice,
-        "Generated": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    }
+st.subheader("💬 Chat with Health AI")
+
+for m in st.session_state.messages:
+    with st.chat_message(m["role"]):
+        st.markdown(m["content"])
+
+msg = st.chat_input("Describe how you feel...")
+
+if msg:
+    st.session_state.messages.append({"role": "user", "content": msg})
+    reply = health_ai(msg)
+    st.session_state.messages.append({"role": "assistant", "content": reply})
+    st.rerun()
+
+          DOWNLOAD 
+
+st.divider()
+if st.button("⬇️ Download Health Report"):
+    report = f"AI Health Checker Report\nUser: {st.session_state.user}\nDate: {datetime.now()}\n\n"
+    for m in st.session_state.messages:
+        report += f"{m['role'].upper()}: {m['content']}\n\n"
 
     st.download_button(
-        "📥 Download Health Report",
-        json.dumps(report, indent=4),
-        file_name="ai_health_report.json",
-        mime="application/json"
+        "Download",
+        report,
+        file_name="health_report.txt"
     )
 
-# ---------------------------------
-# Gallery (Lightweight)
-# ---------------------------------
-st.markdown("---")
-st.subheader("🖼 Health Awareness Gallery")
-
-st.image(
-    [
-        "https://images.unsplash.com/photo-1535914254981-b5012eebbd15",
-        "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b"
-    ],
-    caption=["Healthy Lifestyle", "Daily Exercise"],
-    use_column_width=True
-)
-
-# ---------------------------------
-# Chat (Session-based)
-# ---------------------------------
-st.markdown("---")
-st.subheader("💬 Health Assistant Chat")
-
-user_msg = st.text_input("Ask a health-related question")
-
-if st.button("Send"):
-    if user_msg:
-        st.session_state.chat.append(("You", user_msg))
-        st.session_state.chat.append(
-            ("AI", "I provide general health guidance. Please consult a professional for medical advice.")
-        )
-
-for sender, msg in st.session_state.chat:
-    st.write(f"**{sender}:** {msg}")
-
-# ---------------------------------
-# Investor / Impact Dashboard
-# ---------------------------------
-st.markdown("---")
-st.subheader("📊 Impact & Investor Snapshot")
-
-c1, c2, c3 = st.columns(3)
-
-c1.metric("Target Users", "Individuals")
-c2.metric("Use Case", "Preventive Health")
-c3.metric("Scalability", "High")
-
-st.info(
-    "This AI Health Checker promotes early health awareness and preventive action. "
-    "Designed for NGOs, communities, and digital health initiatives."
-)
-
-# ---------------------------------
-# Link to CyberSafe Checker
-# ---------------------------------
-st.markdown("---")
-st.subheader("🔐 Explore Other Tools")
-
-st.markdown(
-    "➡️ **AI CyberSafe Checker** – Digital safety & phishing awareness platform."
-)
-
-# ---------------------------------
-# Footer
-# ---------------------------------
-st.markdown("""
-<hr>
-<p style="text-align:center; font-size:12px;">
-© 2026 Ebiklean Global • AI for Social Good
-</p>
-""", unsafe_allow_html=True)
+st.caption("© Powered by Ebiklean Global")
