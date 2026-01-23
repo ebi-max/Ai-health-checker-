@@ -42,6 +42,15 @@ An AI-powered cybersecurity awareness tool designed to help users understand dig
 
 ⚠️ *This tool provides awareness-level guidance only.*
 
+ phishEye 
+
+PhishEye is an AI-powered phishing detection tool designed to help users identify and report suspicious emails, messages, and links in real time. By analyzing content patterns commonly used by scammers, PhishEye helps individuals and organizations avoid fraud, identity theft, and online scams.
+It promotes safer digital behavior through instant analysis, awareness tips, and downloadable security reports.
+
+ Reddit CyberSafe Game
+
+Reddit CyberSafe Game is an interactive, gamified learning platform that educates users on online safety, phishing awareness, and cyber hygiene. Through quizzes and real-world scenarios inspired by social media interactions, players learn how to recognize and respond to cyber threats in a fun and engaging way.
+The game encourages responsible internet use while improving digital literacy and cyber resilience.
 
 
  📊 FEATURES ACROSS ALL APPS 
